@@ -1,0 +1,8 @@
+# Ignore node_modules directory
+node_modules/
+server/config/config.env
+
+# Ignore log files and build artifacts
+*.log
+/build/
+/dist/
