@@ -15,5 +15,19 @@ exports.updateProduct = async (req, res, next) => {
     let product = await Product.findById(req.params.id)
     if (!product) { return res.status(404).json({ success: false, message: "Product not found" }) }
     product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    res.status(200).json({success:true,message:"Product updated successfully"})
+    res.status(200).json({ success: true, message: "Product updated successfully",product })
+}
+//Only for admin
+exports.deleteProduct = async (req, res, next) => {
+    let product = await Product.findById(req.params.id)
+    if (!product) { return res.status(404).json({ success: false, message: "Product not found" }) }
+    await Product.findByIdAndDelete(req.params.id).then(() => {
+        res.status(200).json({ succses: true, message: "Product deleted successfully" })
+    })
+}
+//for user
+exports.getProduct = async (req, res, next) => {
+    let product = await Product.findById(req.params.id)
+    if (!product) { return res.status(404).json({ success: false, message: "Product not found" }) }
+    res.status(200).json({ succses: true, product })
 }
