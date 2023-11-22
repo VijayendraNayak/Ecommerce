@@ -24,3 +24,7 @@ exports.login = asyncErrHandler(async (req, res, next) => {
     const { password: pass, ...rest } = user._doc
     res.cookie("access_token", token, { httpOnly: true }).status(200).json(rest)
 })
+exports.logout = asyncErrHandler(async (req, res, next) => {
+    res.clearCookie('access_token')
+    res.status(200).json({ success: true, message: "User logged out successfully" })
+})
