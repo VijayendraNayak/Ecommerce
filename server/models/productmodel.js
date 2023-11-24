@@ -22,7 +22,7 @@ const productSchema = mongoose.Schema({
     images:
     {
         type: Array,
-        default:"image"
+        default: "image"
     },
     category: {
         type: String,
@@ -54,10 +54,16 @@ const productSchema = mongoose.Schema({
             },
         },
     ],
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now,
     },
+
 });
 
 module.exports = mongoose.model("Product", productSchema);
