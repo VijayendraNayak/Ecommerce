@@ -33,7 +33,7 @@ exports.login = asyncErrHandler(async (req, res, next) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
 
     // Exclude sensitive information from the response
-    const { password: pass, resetPasswordToken, resetPasswordExpire, ...rest } = user._doc;
+    const { password: pass, ...rest } = user._doc;
 
     // Set a cookie with the access token
     res.cookie('access_token', token, { httpOnly: true });
@@ -44,4 +44,18 @@ exports.login = asyncErrHandler(async (req, res, next) => {
 exports.logout = asyncErrHandler(async (req, res, next) => {
     res.clearCookie('access_token')
     res.status(200).json({ success: true, message: "User logged out successfully" })
+})
+exports.getUserDetails = asyncErrHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id)
+    const {password:pass,...rest}=user._doc;
+    res.status(200).json({ message: "User details", rest })
+})
+exports.updatePassword=asyncErrHandler(async(req,res,next)=>{
+    const {oldpass,newpass}=req.body
+    const isverfied=bcrypt.compareSync(oldpass,req.user.password)
+    if(!isverfied){return next(errorHandler(403,"Wrong password try again"))}
+    const hashnewpass=bcrypt.hashSync(newpass,10)
+    req.user.password=hashnewpass
+    const user=await User.findByIdAndUpdate(req.user._id,req.user,{new:true})
+    res.status(200).json({message:"Password updated successfully",user})
 })
