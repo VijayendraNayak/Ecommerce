@@ -1,5 +1,5 @@
 const express=require("express");
-const { register,login, logout, getUserDetails,updatePassword, updateProfile,  numberOfUsers } = require("../controllers/usercontroller");
+const { register,login, logout, getUserDetails,updatePassword, updateProfile,  numberOfUsers, getSingleUser } = require("../controllers/usercontroller");
 const { isAuthenticated, authorizeRoles } = require("../middleware/Authenticated");
 const router=express.Router();
 
@@ -10,5 +10,6 @@ router.get("/userdetails",isAuthenticated, getUserDetails)
 router.put("/password",isAuthenticated,updatePassword)
 router.put("/update",isAuthenticated,updateProfile)
 router.get("/admin/noofpro",isAuthenticated,authorizeRoles("admin"), numberOfUsers)
+router.get("/admin/singleuser/:id",isAuthenticated,authorizeRoles("admin"), getSingleUser)
 
 module.exports=router

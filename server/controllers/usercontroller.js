@@ -68,7 +68,12 @@ exports.updateProfile = asyncErrHandler(async (req, res, next) => {
 
 exports.numberOfUsers = asyncErrHandler(async(req,res,next) => {
     const length = await User.countDocuments()
+    const users= await User.find()
     if (!length) { return next(errorHandler(403, "There are no users in the database")) }
-    res.status(200).json({ message: "Num of users:", length })
+    res.status(200).json({ message: "Num of users:", length,users})
 })
-
+exports.getSingleUser=asyncErrHandler(async(req,res,next)=>{
+    const user=await User.findById(req.params.id)
+    if(!user){return next(errorHandler(404,"User not found"))}
+    res.status(200).json({message:"User found successfully",user})
+})
