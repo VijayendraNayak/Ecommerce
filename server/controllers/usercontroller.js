@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { findByIdAndUpdate } = require('../models/usermodel')
 
 
 exports.register = asyncErrHandler(async (req, res, next) => {
@@ -59,3 +60,17 @@ exports.updatePassword=asyncErrHandler(async(req,res,next)=>{
     const user=await User.findByIdAndUpdate(req.user._id,req.user,{new:true})
     res.status(200).json({message:"Password updated successfully",user})
 })
+
+exports.updateProfile=asyncErrHandler(async(req,res,next)=>{
+    const {name,email,avatar}=req.body
+    req.user.name=name
+    req.user.email=email
+    req.user.avatar=avatar
+    const user=await User.findByIdAndUpdate(req.user._id,req.user,{new:true})
+    res.status(200).json({message:"User updated Successfully",user})
+})
+
+exports.Numberofproducts=asyncErrHandler(async=>{
+
+})
+
