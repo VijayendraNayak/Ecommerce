@@ -65,6 +65,14 @@ exports.updateProfile = asyncErrHandler(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user._id, req.user, { new: true })
     res.status(200).json({ message: "User updated Successfully", user })
 })
+exports.updateRole = asyncErrHandler(async (req, res, next) => {
+    const {role} = req.body
+    let user = await User.findById(req.params.id)
+    if(!user){return next(errorHandler(404,"User not found"))}
+    user.role=role
+    const upuser=await User.findByIdAndUpdate(req.params.id,user,{new:true})
+    res.status(200).json({ message: "User updated Successfully", upuser })
+})
 
 exports.numberOfUsers = asyncErrHandler(async(req,res,next) => {
     const length = await User.countDocuments()
@@ -76,4 +84,10 @@ exports.getSingleUser=asyncErrHandler(async(req,res,next)=>{
     const user=await User.findById(req.params.id)
     if(!user){return next(errorHandler(404,"User not found"))}
     res.status(200).json({message:"User found successfully",user})
+})
+exports.deleteUser=asyncErrHandler(async(req,res,next)=>{
+    const user=await User.findById(req.params.id)
+    if(!user){return next(errorHandler(404,"The user doesnot exist"))}
+    await User.findByIdAndDelete(req.params.id)
+    res.status(200).json({message:"User deleted successfully"})
 })

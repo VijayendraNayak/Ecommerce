@@ -76,3 +76,6 @@ exports.getSearch = asyncErrHandler(async (req, res, next) => {
         if(products.length<1){return next(errorHandler(404,"Product not found"))}
     return res.status(200).json({products,count:products.length});
 })
+exports.ReviewProduct=asyncErrHandler(async(req,res,next)=>{
+    
+})
