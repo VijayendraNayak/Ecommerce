@@ -76,6 +76,43 @@ exports.getSearch = asyncErrHandler(async (req, res, next) => {
         if(products.length<1){return next(errorHandler(404,"Product not found"))}
     return res.status(200).json({products,count:products.length});
 })
-exports.ReviewProduct=asyncErrHandler(async(req,res,next)=>{
-    
-})
+exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
+    const review = {
+        user: req.user._id,
+        name: req.user.name,
+        rating: req.body.reviews[0].rating,
+        comment: req.body.reviews[0].comment
+    };
+
+    const ruser = review.user;
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+        return next(errorHandler(404, "Product not found"));
+    }
+
+    let rating = 0;
+    let userAlreadyReviewed = false;
+
+    product.reviews.forEach(rev => {
+        rating += rev.rating;
+        if (rev.user.equals(ruser)) {
+            userAlreadyReviewed = true;
+            return; // Exit the loop if user has already reviewed
+        }
+    });
+
+    if (userAlreadyReviewed) {
+        return next(errorHandler(401, "User has already reviewed this product"));
+    }
+
+    product.reviews.push(review);
+
+    product.ratings = rating / product.reviews.length;
+    product.numOfReviews = product.reviews.length;
+
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, product, { new: true });
+
+    res.status(200).json({ message: "Review uploaded successfully", product: updatedProduct });
+});
+ 
