@@ -94,6 +94,7 @@ exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
     let rating = 0;
     let userAlreadyReviewed = false;
 
+    
     product.reviews.forEach(rev => {
         rating += rev.rating;
         if (rev.user.equals(ruser)) {
@@ -101,11 +102,12 @@ exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
             return; // Exit the loop if user has already reviewed
         }
     });
-
+    
     if (userAlreadyReviewed) {
         return next(errorHandler(401, "User has already reviewed this product"));
     }
-
+    
+    rating+=review.rating
     product.reviews.push(review);
 
     product.ratings = rating / product.reviews.length;
