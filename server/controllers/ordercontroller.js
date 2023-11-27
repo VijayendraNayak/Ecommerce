@@ -1,7 +1,7 @@
 const Order = require("../models/orderModel");
 const Product = require("../models/productmodel");
-const {errorHandler} = require("../utils/errorHandler");
-const {asyncErrHandler} = require("../middleware/asyncerrorHandler");
+const { errorHandler } = require("../utils/errorHandler");
+const { asyncErrHandler } = require("../middleware/asyncerrorHandler");
 
 // Create new Order
 exports.newOrder = asyncErrHandler(async (req, res, next) => {
@@ -32,3 +32,14 @@ exports.newOrder = asyncErrHandler(async (req, res, next) => {
     order,
   });
 });
+
+exports.getorderdetails = asyncErrHandler(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate("user", "name email")
+  if (!order) { return next(errorHandler(404, "Product not found")) }
+  res.status(200).json({ message: "order found", order })
+})
+exports.getmyorderdetails = asyncErrHandler(async (req, res, next) => {
+  const order = await Order.find({ user: req.user.id })
+  if (!order) { return next(errorHandler(404, "Product not found")) }
+  res.status(200).json({ message: "your orders", order })
+})

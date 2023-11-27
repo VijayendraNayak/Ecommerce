@@ -1,8 +1,10 @@
-const express=require("express")
-const { newOrder } = require("../controllers/ordercontroller")
-const router=express.Router()
+const express = require("express")
+const { newOrder, getorderdetails, getmyorderdetails } = require("../controllers/ordercontroller")
+const router = express.Router()
 const { isAuthenticated, authorizeRoles } = require("../middleware/Authenticated");
 
-router.post("/createorder",isAuthenticated,newOrder)
+router.post("/createorder", isAuthenticated, newOrder)
+router.get("/getorder/:id", isAuthenticated, getorderdetails)
+router.get("/myorder", isAuthenticated, getmyorderdetails)
 
-module.exports=router
+module.exports = router
