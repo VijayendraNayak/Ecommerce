@@ -1,5 +1,6 @@
 const productrouter = require('./routes/productrouter.js')
 const userrouter = require('./routes/userrouter.js')
+const orderrouter = require('./routes/orderroutes.js')
 const express = require("express");
 const app = express();
 const cookieParser=require("cookie-parser")
@@ -9,6 +10,7 @@ app.use(cookieParser())
 
 app.use('/api/product', productrouter)
 app.use('/api/user', userrouter)
+app.use('/api/order', orderrouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500
