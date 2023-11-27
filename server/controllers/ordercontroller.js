@@ -43,3 +43,38 @@ exports.getmyorderdetails = asyncErrHandler(async (req, res, next) => {
   if (!order) { return next(errorHandler(404, "Product not found")) }
   res.status(200).json({ message: "your orders", order })
 })
+exports.getallorderdetails = asyncErrHandler(async (req, res, next) => {
+  const order = await Order.find()
+  let totalamount = 0
+  order.forEach(element => {
+    totalamount += order.totalPrice
+  });
+  if (!order) { return next(errorHandler(404, "Product not found")) }
+  res.status(200).json({ message: "Orders", order, totalamount })
+})
+exports.deleteorder = asyncErrHandler(async (req, res, next) => {
+  const order = await Order.findByIdAndDelete(req.params.id)
+  if (!order) { return next(errorHandler(404, "Product not found")) }
+  res.status(200).json({ message: "The order has been deleted successfully"})
+})
+exports.updatestatus = asyncErrHandler(async (req, res, next) => {
+  const order = await Order.findById(req.params.id)
+  if (!order) { return next(errorHandler(404, "Product not found")) }
+  if (order.orderStatus === "Delivered") { return next(errorHandler(400, "The item has already been delivered")) }
+  order.orderItems.forEach(async (order) => {
+    await update(order.product, order.quantity)
+  })
+  order.orderStatus = req.body.status
+
+  if (order.orderStatus === "Delivered") {
+    order.deliveredAt = Date.now()
+  }
+  await order.save({ validateBeforeSave: false })
+  res.status(200).json({ message: "Orders", order})
+})
+const update = async (id, quantity) => {
+  const product = await Product.findById(id)
+  product.stock -= quantity
+  await product.save({ validateBeforeSave: false })
+}
+
