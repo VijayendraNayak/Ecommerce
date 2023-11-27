@@ -4,7 +4,7 @@ const router = express.Router()
 const { isAuthenticated, authorizeRoles } = require("../middleware/Authenticated");
 
 router.post("/createorder", isAuthenticated, newOrder)
-router.get("/getorder/:id", isAuthenticated, getorderdetails)
+router.get("/admin/getorder/:id", isAuthenticated ,authorizeRoles('admin'), getorderdetails)
 router.get("/myorder", isAuthenticated, getmyorderdetails)
 
 module.exports = router
