@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className="bg-black text-white flex justify-between">
+    <div className="bg-black text-white flex flex-col lg:flex-row justify-between px-20 mt-20">
       <div className="flex flex-col gap-2 p-6 items-center">
         <p className="font-semibold text-xl">Download our app on</p>
         <div className="flex flex-col w-40">
@@ -26,7 +26,7 @@ const Footer = () => {
         <p>&copy; All rights reserved @ Ecommerce</p>
       </div>
 
-      <div className="p-6 flex flex-col gap-4 items-center pr-20">
+      <div className="p-6 flex flex-col gap-4 items-center ">
         <p className="font-semibold text-xl">Follow us on</p>
         <Link
           className="flex items-center gap-2 font-semibold"

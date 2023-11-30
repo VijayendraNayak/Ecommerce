@@ -5,7 +5,7 @@ const { errorHandler } = require('../utils/errorHandler')
 //for users to get the product
 exports.getallproducts = async (req, res) => {
     const product = await Product.find()
-    res.status(200).json({ message: "This api is working", product })
+    res.status(200).json({ message: "This api is working", product,success:true })
 }
 //for admin to post the product
 exports.createProduct = asyncErrHandler(async (req, res, next) => {
@@ -74,7 +74,7 @@ exports.getSearch = asyncErrHandler(async (req, res, next) => {
         .limit(limit)
         .skip(startIndex);
         if(products.length<1){return next(errorHandler(404,"Product not found"))}
-    return res.status(200).json({products,count:products.length});
+    return res.status(200).json({success:true,products,count:products.length});
 })
 exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
     const review = {
@@ -115,6 +115,6 @@ exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
 
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, product, { new: true });
 
-    res.status(200).json({ message: "Review uploaded successfully", product: updatedProduct });
+    res.status(200).json({ success:true,message: "Review uploaded successfully", product: updatedProduct });
 });
  
