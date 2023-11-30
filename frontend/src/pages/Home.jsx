@@ -31,29 +31,40 @@ const Home = () => {
   return (
     <Fragment>
       <div className="flex flex-col items-center p-6 pt-10 gap-10 ">
-        <p className="text-red-500 font-bold text-6xl ">Welcome to Ecommerce</p>
-        <p className="text-red-300 font-semibold text-4xl ">
+        <div>
+          <p className="text-red-500 font-bold lg:text-6xl text-4xl ">
+            Welcome to
+          </p>
+          <p className="text-red-500 font-bold lg:text-6xl text-4xl ">
+            Ecommerce
+          </p>
+        </div>
+        <p className="text-red-300 font-semibold lg:text-4xl text-2xl ">
           FIND AMAZING PRODUCTS
         </p>
         <button className="flex items-center bg-red-200 p-2 rounded-lg px-10 border-2 border-red-500 hover:scale-110">
           Scroll <MdOutlineMouse />
         </button>
       </div>
+
       <div className="flex flex-col gap-4">
         <p className="text-center font-semibold underline pt-10">
           Featured Products
         </p>
-        <div className=" p-6 flex flex-wrap px-32 justify-around ">
+        <div className=" p-6 flex flex-wrap justify-around ">
           {products &&
             products.map((product) => (
               <div
                 key={product._id}
                 className="border-2 rounded-lg border-red-500 w-60 h-96"
               >
-                <img className="rounded-lg w-full h-48" src={product.images[0]} alt="shirt"  />
+                <img
+                  className="rounded-lg w-full h-48"
+                  src={product.images[0]}
+                  alt="shirt"
+                />
                 <p>Name:{product.name}</p>
                 <p>Stock:{product.stock}</p>
-
               </div>
             ))}
         </div>
