@@ -11,9 +11,11 @@ import Product from "./pages/Product";
 export default function App() {
   return (
     <BrowserRouter>
+    <Routes>
+        <Route path="/" element={<Home/>}/>
+    </Routes>
     <Header/>
       <Routes>
-        <Route path="/" element={<Home/>}/>
         <Route path="/sign-in" element={<Login/>}/>
         <Route path="/sign-up" element={<Register/>}/>
         <Route path="/about" element={<About/>}/>

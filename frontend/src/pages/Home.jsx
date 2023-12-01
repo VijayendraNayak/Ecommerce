@@ -1,26 +1,38 @@
 import React, { useEffect, useState, Fragment, useRef } from "react";
 import { MdOutlineMouse } from "react-icons/md";
+import Header from "../components/Header/Header";
 
 const Home = () => {
   const [products, setProducts] = useState(null);
   const [hasEffectRun, setHasEffectRun] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const featuredProductsRef = useRef(null);
 
   useEffect(() => {
     if (!hasEffectRun) {
       const fetchProducts = async () => {
         try {
+          setLoading(true);
+          setError(false);
           const res = await fetch("/api/product/getallproducts");
           const result = await res.json();
 
           if (result.success === true) {
-            setProducts(result.product); // Assuming products is an array in the result
+            // Introduce a delay of 2000 milliseconds (2 seconds)
+            setTimeout(() => {
+              setLoading(false);
+              setError(false);
+              setProducts(result.product);
+            }, 1000);
           } else {
-            // Handle the case when success is not true
+            setLoading(false);
+            setError(true);
           }
         } catch (error) {
+          setLoading(false);
+          setError(true);
           console.error("Error fetching products:", error);
-          // Handle the error
         }
       };
 
@@ -38,6 +50,13 @@ const Home = () => {
 
   return (
     <Fragment>
+      <Header loading={loading}/>
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-50">
+          <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-red-500"></div>
+        </div>
+      )}
       <div className="flex flex-col items-center p-6 pt-32 gap-10 ">
         <div>
           <p className="text-red-500 font-bold lg:text-6xl text-4xl ">
