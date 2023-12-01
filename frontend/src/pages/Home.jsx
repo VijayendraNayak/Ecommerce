@@ -1,9 +1,10 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState, Fragment, useRef } from "react";
 import { MdOutlineMouse } from "react-icons/md";
 
 const Home = () => {
   const [products, setProducts] = useState(null);
   const [hasEffectRun, setHasEffectRun] = useState(false);
+  const featuredProductsRef = useRef(null);
 
   useEffect(() => {
     if (!hasEffectRun) {
@@ -28,9 +29,16 @@ const Home = () => {
     }
   }, [hasEffectRun]);
 
+  const scrollToFeaturedProducts = () => {
+    featuredProductsRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <Fragment>
-      <div className="flex flex-col items-center p-6 pt-10 gap-10 ">
+      <div className="flex flex-col items-center p-6 pt-32 gap-10 ">
         <div>
           <p className="text-red-500 font-bold lg:text-6xl text-4xl ">
             Welcome to
@@ -42,21 +50,24 @@ const Home = () => {
         <p className="text-red-300 font-semibold lg:text-4xl text-2xl ">
           FIND AMAZING PRODUCTS
         </p>
-        <button className="flex items-center bg-red-200 p-2 rounded-lg px-10 border-2 border-red-500 hover:scale-110">
+        <button
+          className="flex items-center bg-red-200 p-2 rounded-lg px-10 border-2 border-red-500 hover:scale-110"
+          onClick={scrollToFeaturedProducts}
+        >
           Scroll <MdOutlineMouse />
         </button>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4" ref={featuredProductsRef}>
         <p className="text-center font-semibold underline pt-10">
           Featured Products
         </p>
-        <div className=" p-6 flex flex-wrap justify-around ">
+        <div className="p-6 flex flex-wrap justify-around gap-6">
           {products &&
             products.map((product) => (
               <div
                 key={product._id}
-                className="border-2 rounded-lg border-red-500 w-60 h-96"
+                className="border-2 rounded-lg border-red-500 w-60 h-96 hover:scale-110 hover:border-yellow-500 transition-transform duration-500"
               >
                 <img
                   className="rounded-lg w-full h-48"

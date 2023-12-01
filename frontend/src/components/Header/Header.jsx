@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
 
+  const handleScroll = () => {
+    const currentScrollPos = window.scrollY;
+
+    if (currentScrollPos > prevScrollPos) {
+      // Scrolling down
+      setIsNavOpen(false);
+    } else {
+      // Scrolling up
+      setIsNavOpen(true);
+    }
+
+    setPrevScrollPos(currentScrollPos);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollPos]);
+
   return (
-    <header className='bg-red-100'>
-      <div className='flex justify-between p-3 max-w-6xl mx-auto'>
+    <header className={`bg-red-100 fixed w-full z-10 transition-transform duration-300 transform ${isNavOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className='flex justify-between p-3 max-w-6xl mx-auto '>
         <Link to='/'>
           <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
             <span className='text-red-300'>E</span>
@@ -29,7 +51,7 @@ const Header = () => {
 
         {/* Navbar for medium and above screens */}
         <ul className={`flex gap-6 sm:flex lg:items-center ${isNavOpen ? 'flex' : 'hidden'}`}>
-          <Link to='/'>
+        <Link to='/'>
             <li className='hover:underline text-red-700'>Home</li>
           </Link>
           <Link to='/product'>
@@ -47,7 +69,7 @@ const Header = () => {
         </ul>
 
         {/* Search form */}
-        <form className='bg-red-200 rounded-lg  items-center px-3 hidden sm:flex'>
+        <form className='bg-red-200 rounded-lg items-center px-3 hidden sm:flex'>
           <input type="text" placeholder='Search...' className='bg-transparent focus:outline-none w-20 sm:w-48' />
           <FaSearch className='text-red-600'></FaSearch>
         </form>
