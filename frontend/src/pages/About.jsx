@@ -2,7 +2,8 @@ import React from 'react'
 
 const about = () => {
   return (
-    <div>
+    <div className='text-red-500'> 
+      about
       
     </div>
   )

@@ -8,22 +8,31 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Contact from "./pages/Contact";
 import Product from "./pages/Product";
+
 export default function App() {
   return (
     <BrowserRouter>
-    <Routes>
-        <Route path="/" element={<Home/>}/>
-    </Routes>
-    <Header/>
       <Routes>
-        <Route path="/sign-in" element={<Login/>}/>
-        <Route path="/sign-up" element={<Register/>}/>
-        <Route path="/about" element={<About/>}/>
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/contact" element={<Contact/>}/>
-        <Route path="/product" element={<Product/>}/>
+        {/* Home route without the Header */}
+        <Route path="/" element={<Home />} />
+
+        {/* Routes with the Header */}
+        <Route
+          path="/(|login|register|about|profile|contact|product)"
+          element={
+            <div>
+              <Header />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/product" element={<Product />} />
+              <Footer />
+            </div>
+          }
+        />
       </Routes>
-      <Footer/>
     </BrowserRouter>
   );
 }
