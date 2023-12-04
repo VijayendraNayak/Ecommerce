@@ -18,16 +18,18 @@ export default function App() {
 
         {/* Routes with the Header */}
         <Route
-          path="/(|login|register|about|profile|contact|product)"
+          path="/*"
           element={
             <div>
               <Header />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/product" element={<Product />} />
+              <Routes>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="about" element={<About />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="product" element={<Product />} />
+              </Routes>
               <Footer />
             </div>
           }
