@@ -9,6 +9,7 @@ import {
 
 const Login = () => {
   const [formdata, setFormdata] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
@@ -41,6 +42,10 @@ const Login = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="p-10 pt-20">
       {loading && (
@@ -58,13 +63,22 @@ const Login = () => {
             id="email"
             onChange={handleChange}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border p-3 rounded-lg"
-            id="password"
-            onChange={handleChange}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="border p-3 rounded-lg pr-10 w-[245px] sm:w-[460px]"
+              id="password"
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="absolute top-1/2 right-2 transform -translate-y-1/2"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
         </form>
         <button
           className="bg-red-500 text-white p-3 rounded-lg font-semibold text-xl"
