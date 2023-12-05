@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { app } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
+import { FcGoogle } from "react-icons/fc";
 import {
   signInStart,
   signInSuccess,
@@ -41,13 +44,44 @@ const Login = () => {
       dispatch(signInFailure(error));
     }
   };
+  const handlegoogleSubmit = async (e) => {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth(app);
+    const result = await signInWithPopup(auth, provider);
+console.log(result.user.displayName)
+    e.preventDefault();
+    try {
+      dispatch(signInStart());
+      const res = await fetch("/api/user/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: result._tokenResponse.displayName,
+          email: result._tokenResponse.email,
+          avatar: result._tokenResponse.photoURL,
+        }),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signInFailure(data.message));
+        return;
+      }
+      dispatch(signInSuccess(data));
+      navigate("/");
+    } catch (error) {
+      console.log("catcherr", error);
+      dispatch(signInFailure(error));
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <div className="p-10 pt-20">
+    <div className="flex flex-col p-10 pt-20 justify-center items-center">
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-50">
           <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-red-500"></div>
@@ -86,6 +120,12 @@ const Login = () => {
         >
           Login
         </button>
+        <button
+          className=" flex bg-white text-black p-3 rounded-lg font-semibold text-xl items-center justify-center gap-2"
+          onClick={handlegoogleSubmit}
+        >
+          <FcGoogle /> Login with Google
+        </button>
         <div className="flex justify-end">
           <Link to="/register">
             <span className="text-green-500 font-bold cursor-pointer">
@@ -94,7 +134,7 @@ const Login = () => {
           </Link>
         </div>
       </div>
-      {error && (<p className="text-red-500">{error}</p>)}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 };

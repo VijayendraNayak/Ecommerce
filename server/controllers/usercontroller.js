@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken")
 exports.register = asyncErrHandler(async (req, res, next) => {
     const { name, email, password, role } = req.body
     const newpassword = bcrypt.hashSync(password, 10)
-    const user = await User.create({ name, email, password: newpassword,role })
+    const user = await User.create({ name, email, password: newpassword, role })
     if (!user) { return next(errorHandler(400, "User isn't created")) }
     res.status(200).json({ success: true, user })
 })
@@ -66,28 +66,46 @@ exports.updateProfile = asyncErrHandler(async (req, res, next) => {
     res.status(200).json({ message: "User updated Successfully", user })
 })
 exports.updateRole = asyncErrHandler(async (req, res, next) => {
-    const {role} = req.body
+    const { role } = req.body
     let user = await User.findById(req.params.id)
-    if(!user){return next(errorHandler(404,"User not found"))}
-    user.role=role
-    const upuser=await User.findByIdAndUpdate(req.params.id,user,{new:true})
+    if (!user) { return next(errorHandler(404, "User not found")) }
+    user.role = role
+    const upuser = await User.findByIdAndUpdate(req.params.id, user, { new: true })
     res.status(200).json({ message: "User updated Successfully", upuser })
 })
 
-exports.numberOfUsers = asyncErrHandler(async(req,res,next) => {
+exports.numberOfUsers = asyncErrHandler(async (req, res, next) => {
     const length = await User.countDocuments()
-    const users= await User.find()
+    const users = await User.find()
     if (!length) { return next(errorHandler(403, "There are no users in the database")) }
-    res.status(200).json({ message: "Num of users:", length,users})
+    res.status(200).json({ message: "Num of users:", length, users })
 })
-exports.getSingleUser=asyncErrHandler(async(req,res,next)=>{
-    const user=await User.findById(req.params.id)
-    if(!user){return next(errorHandler(404,"User not found"))}
-    res.status(200).json({message:"User found successfully",user})
+exports.getSingleUser = asyncErrHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id)
+    if (!user) { return next(errorHandler(404, "User not found")) }
+    res.status(200).json({ message: "User found successfully", user })
 })
-exports.deleteUser=asyncErrHandler(async(req,res,next)=>{
-    const user=await User.findById(req.params.id)
-    if(!user){return next(errorHandler(404,"The user doesnot exist"))}
+exports.deleteUser = asyncErrHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id)
+    if (!user) { return next(errorHandler(404, "The user doesnot exist")) }
     await User.findByIdAndDelete(req.params.id)
-    res.status(200).json({message:"User deleted successfully"})
+    res.status(200).json({ message: "User deleted successfully" })
+})
+exports.google = asyncErrHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email })
+    if (user) {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE })
+        const { password: pass, ...rest } = user._doc
+        return res.cookie("access_token", token, { httpOnly: true }).status(200).json(rest)
+    }
+    else {
+        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+        const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+        console.log(req.body)
+        const newUser = new User({ name: req.body.name, email: req.body.email, password: hashedPassword, avatar: req.body.photo });
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+    }
 })

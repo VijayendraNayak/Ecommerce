@@ -39,7 +39,7 @@ const Header = ({ loading }) => {
         isNavVisible ? "translateY(0)" : "-translate-y-full"
       }`}
     >
-      <div className="flex justify-between p-3 max-w-6xl w-full mx-auto">
+      <div className="flex justify-between p-3 max-w-6xl w-full mx-auto items-center">
         <Link to="/">
           <div
             className={`font-bold text-sm sm:text-xl sm:flex ${
@@ -74,7 +74,7 @@ const Header = ({ loading }) => {
           {/* {console.log(currentUser.avatar)} */}
           {currentUser ? (
             <Link to="/profile">
-              <img className=" rounded-full w-12 h-12 hidden sm:flex" src={currentUser.avatar} alt="profile" />
+              <img className=" rounded-full w-10 h-10 hidden sm:flex" src={currentUser.avatar} alt="profile" />
             </Link>
           ) : (
             <Link to="/login">
@@ -85,7 +85,7 @@ const Header = ({ loading }) => {
           )}
         </ul>
         {/* Search form */}
-        <form className="bg-red-200 rounded-lg items-center px-3 hidden sm:flex">
+        <form className="bg-red-200 rounded-lg items-center p-3 hidden sm:flex">
           <input
             type="text"
             placeholder="Search..."
