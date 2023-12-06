@@ -46,8 +46,8 @@ const Header = ({ loading }) => {
               navbar ? "hidden" : "flex"
             }`}
           >
-            <span className="text-red-300">E</span>
-            <span className="text-red-500">commerce</span>
+            <span className="text-red-300 text-3xl">E</span>
+            <span className="text-red-500 text-3xl">commerce</span>
           </div>
         </Link>
         <ul className={`lg:flex md:flex gap-6 lg:items-center `}>

@@ -102,7 +102,7 @@ exports.google = asyncErrHandler(async (req, res, next) => {
         const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
         const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
         console.log(req.body)
-        const newUser = new User({ name: req.body.name, email: req.body.email, password: hashedPassword, avatar: req.body.photo });
+        const newUser = new User({ name: req.body.name, email: req.body.email, password: hashedPassword, avatar: req.body.avatar });
         await newUser.save();
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
         const { password: pass, ...rest } = newUser._doc;

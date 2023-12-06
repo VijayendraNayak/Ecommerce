@@ -48,7 +48,6 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
     const result = await signInWithPopup(auth, provider);
-console.log(result.user.displayName)
     e.preventDefault();
     try {
       dispatch(signInStart());
@@ -58,9 +57,9 @@ console.log(result.user.displayName)
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: result._tokenResponse.displayName,
-          email: result._tokenResponse.email,
-          avatar: result._tokenResponse.photoURL,
+          name: result.user.displayName,
+          email: result.user.email,
+          avatar: result.user.photoURL,
         }),
       });
       const data = await res.json();
