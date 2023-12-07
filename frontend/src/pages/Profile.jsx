@@ -3,13 +3,14 @@ import { useSelector } from "react-redux";
 import { updateStart, updateFailure, updateSuccess } from "../Redux/User/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {use}
+import { useRef } from "react";
 
 const Profile = () => {
   const [formdata, setFormdata] = useState({});
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const fileref=useRef(null)
 
   useEffect(() => {
     // Set the form data with initial values when currentUser changes
@@ -52,10 +53,12 @@ const Profile = () => {
       <div className="flex-1 p-10 ">
         <div className="flex gap-4 items-center ">
           <div className="">
+            <input className="hidden" accept="image/.*" type="file" ref={fileref} />
             <img
               src={currentUser?.avatar}  // Use optional chaining here
               alt="profile image"
               className="w-44 h-56 rounded-lg"
+              onClick={()=>fileref.current.click()}
             />
           </div>
           <div className=" flex flex-col gap-4">
