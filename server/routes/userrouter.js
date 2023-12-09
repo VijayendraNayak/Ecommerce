@@ -6,7 +6,7 @@ const router=express.Router();
 router.post("/register",register)
 router.post("/login",login)
 router.post("/google",google)
-router.get("/logout",logout)
+router.get("/logout",isAuthenticated,logout)
 router.get("/userdetails",isAuthenticated, getUserDetails)
 router.put("/password",isAuthenticated,updatePassword)
 router.put("/update",isAuthenticated,updateProfile)

@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
-import { updateStart, updateFailure, updateSuccess } from "../Redux/User/userSlice";
+import { updateStart, updateFailure, updateSuccess,signoutStart,signInFailure,signoutSuccess, signoutFailure } from "../Redux/User/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
@@ -48,6 +48,21 @@ const Profile = () => {
     }
   };
 
+  const handlelogout=async()=>{
+    try {
+      dispatch(signoutStart())
+      const res=await fetch('/api/user/logout')
+      const data=await res.json()
+      if (data.success===false){ 
+        dispatch(signoutFailure(data.message))
+         return}
+      dispatch(signoutSuccess())
+      navigate("/")
+    } catch (error) {
+      dispatch(signoutFailure(error))
+    }
+  }
+
   return (
     <div className="flex pt-28">
       <div className="flex-1 p-10 ">
@@ -85,6 +100,12 @@ const Profile = () => {
               onClick={handleSubmit}
             >
               Update Profile
+            </button>
+            <button
+              className="bg-red-500 text-white p-3 rounded-lg font-semibold text-xl"
+              onClick={handlelogout}
+            >
+              Logout
             </button>
           </div>
         </div>
