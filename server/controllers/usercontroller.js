@@ -42,11 +42,6 @@ exports.logout = asyncErrHandler(async (req, res, next) => {
     res.clearCookie('access_token')
     res.status(200).json({ success: true, message: "User logged out successfully" })
 })
-exports.getUserDetails = asyncErrHandler(async (req, res, next) => {
-    const user = await User.findById(req.user.id)
-    const { password: pass, ...rest } = user._doc;
-    res.status(200).json({ message: "User details", rest })
-})
 exports.updatePassword = asyncErrHandler(async (req, res, next) => {
     const { oldpass, newpass } = req.body
     const isverfied = bcrypt.compareSync(oldpass, req.user.password)

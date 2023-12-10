@@ -9,6 +9,8 @@ import Register from "./pages/Register";
 import Contact from "./pages/Contact";
 import Product from "./pages/Product";
 import Changepass from "./pages/Changepass";
+import Privateroute from "./components/Privateroute";
+import Adminroute from "./components/Adminroute";
 
 export default function App() {
   return (
@@ -27,10 +29,15 @@ export default function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="about" element={<About />} />
+                <Route element={<Privateroute/>}>
                 <Route path="profile" element={<Profile />} />
+                <Route path="changepassword" element={<Changepass />} />
+                </Route>
+                <Route element={<Adminroute/>}>
+                
+                </Route>
                 <Route path="contact" element={<Contact />} />
                 <Route path="product" element={<Product />} />
-                <Route path="changepassword" element={<Changepass />} />
               </Routes>
               <Footer />
             </div>
