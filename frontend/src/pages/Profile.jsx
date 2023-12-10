@@ -1,6 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { updateStart, updateFailure, updateSuccess,signoutStart,signInFailure,signoutSuccess, signoutFailure } from "../Redux/User/userSlice";
+import {
+  updateStart,
+  updateFailure,
+  updateSuccess,
+  signoutStart,
+  signInFailure,
+  signoutSuccess,
+  signoutFailure,
+} from "../Redux/User/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
@@ -10,13 +18,14 @@ const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const fileref=useRef(null)
+  const fileref = useRef(null);
 
   useEffect(() => {
     // Set the form data with initial values when currentUser changes
     setFormdata({
-      name: currentUser?.name || "",  // Use optional chaining here
+      name: currentUser?.name || "", // Use optional chaining here
       email: currentUser?.email || "",
+      avatar: currentUser?.avatar || "",
     });
   }, [currentUser]);
 
@@ -24,9 +33,7 @@ const Profile = () => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
   };
 
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
       dispatch(updateStart());
       const res = await fetch(`/api/user/update`, {
@@ -41,39 +48,45 @@ const Profile = () => {
         dispatch(updateFailure(data.message));
         return;
       }
-      dispatch(updateSuccess());
-      navigate("/login")
+      dispatch(updateSuccess(data.user));
+      navigate("/");
     } catch (error) {
-      console.log("catcherr", error);
+      dispatch(updateFailure(error));
     }
   };
 
-  const handlelogout=async()=>{
+  const handlelogout = async () => {
     try {
-      dispatch(signoutStart())
-      const res=await fetch('/api/user/logout')
-      const data=await res.json()
-      if (data.success===false){ 
-        dispatch(signoutFailure(data.message))
-         return}
-      dispatch(signoutSuccess())
-      navigate("/")
+      dispatch(signoutStart());
+      const res = await fetch("/api/user/logout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signoutFailure(data.message));
+        return;
+      }
+      dispatch(signoutSuccess(data));
+      navigate("/");
     } catch (error) {
-      dispatch(signoutFailure(error))
+      dispatch(signoutFailure(error));
     }
-  }
+  };
 
   return (
     <div className="flex pt-28">
       <div className="flex-1 p-10 ">
         <div className="flex gap-4 items-center ">
           <div className="">
-            <input className="hidden" accept="image/.*" type="file" ref={fileref} />
+            <input
+              className="hidden"
+              accept="image/.*"
+              type="file"
+              ref={fileref}
+            />
             <img
-              src={currentUser?.avatar}  // Use optional chaining here
+              src={currentUser?.avatar} // Use optional chaining here
               alt="profile image"
               className="w-44 h-56 rounded-lg"
-              onClick={()=>fileref.current.click()}
+              onClick={() => fileref.current.click()}
             />
           </div>
           <div className=" flex flex-col gap-4">
@@ -83,7 +96,7 @@ const Profile = () => {
                 placeholder="Username"
                 className="border p-3 rounded-lg"
                 id="name"
-                value={formdata?.name || ""}  // Use optional chaining here
+                value={formdata?.name || ""} // Use optional chaining here
                 onChange={handleChange}
               />
               <input
@@ -91,7 +104,7 @@ const Profile = () => {
                 placeholder="Email"
                 className="border p-3 rounded-lg"
                 id="email"
-                value={formdata?.email || ""}  // Use optional chaining here
+                value={formdata?.email || ""} // Use optional chaining here
                 onChange={handleChange}
               />
             </form>
