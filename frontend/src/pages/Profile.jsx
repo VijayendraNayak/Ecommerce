@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { IoLogOutOutline } from "react-icons/io5";
 import {
   updateStart,
   updateFailure,
   updateSuccess,
   signoutStart,
-  signInFailure,
   signoutSuccess,
   signoutFailure,
 } from "../Redux/User/userSlice";
+import {
+  ref,
+  getStorage,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import {app} from "../firebase"
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { FcPrevious } from "react-icons/fc";
 
 const Profile = () => {
   const [formdata, setFormdata] = useState({});
+  const [file, setFile] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,9 +38,31 @@ const Profile = () => {
     });
   }, [currentUser]);
 
+  useEffect(() => {
+    if (file) {
+      handlefileupload(file);
+    }
+  }, [file]);
+
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
   };
+
+  const handlefileupload=async(file)=>{
+    const storage=getStorage(app);
+    const filename=new Date().getTime()+file.name 
+    const storageref=ref(storage,filename)
+    const uploadTask=uploadBytesResumable(storageref,file)
+    
+    uploadTask.on(
+      "state_changed",
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((DownloadURL) => {
+          setFormdata({ ...formdata, avatar: DownloadURL });
+        });
+      }
+    );
+  }
 
   const handleSubmit = async (e) => {
     try {
@@ -72,20 +103,21 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex pt-28">
+    <div className=" flex sm:flex-row flex-col pt-28">
       <div className="flex-1 p-10 ">
-        <div className="flex gap-4 items-center ">
+        <div className="flex flex-col lg:flex-row gap-4 items-center ">
           <div className="">
             <input
               className="hidden"
               accept="image/.*"
               type="file"
               ref={fileref}
+              onChange={(e) => setFile(e.target.files[0])}
             />
             <img
-              src={currentUser?.avatar} // Use optional chaining here
+              src={formdata?.avatar} // Use optional chaining here
               alt="profile image"
-              className="w-44 h-56 rounded-lg"
+              className="w-44 h-56 rounded-lg no-repeat center object-cover"
               onClick={() => fileref.current.click()}
             />
           </div>
@@ -115,10 +147,10 @@ const Profile = () => {
               Update Profile
             </button>
             <button
-              className="bg-red-500 text-white p-3 rounded-lg font-semibold text-xl"
+              className="bg-red-500 text-white flex flex-row p-3 justify-center items-center gap-2 rounded-lg font-semibold text-xl"
               onClick={handlelogout}
             >
-              Logout
+              <IoLogOutOutline /> Logout
             </button>
           </div>
         </div>
