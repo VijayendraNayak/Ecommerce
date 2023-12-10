@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { IoLogOutOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 import {
   updateStart,
   updateFailure,
@@ -15,16 +16,15 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import {app} from "../firebase"
+import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { FcPrevious } from "react-icons/fc";
 
 const Profile = () => {
   const [formdata, setFormdata] = useState({});
   const [file, setFile] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const fileref = useRef(null);
@@ -48,21 +48,18 @@ const Profile = () => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
   };
 
-  const handlefileupload=async(file)=>{
-    const storage=getStorage(app);
-    const filename=new Date().getTime()+file.name 
-    const storageref=ref(storage,filename)
-    const uploadTask=uploadBytesResumable(storageref,file)
-    
-    uploadTask.on(
-      "state_changed",
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((DownloadURL) => {
-          setFormdata({ ...formdata, avatar: DownloadURL });
-        });
-      }
-    );
-  }
+  const handlefileupload = async (file) => {
+    const storage = getStorage(app);
+    const filename = new Date().getTime() + file.name;
+    const storageref = ref(storage, filename);
+    const uploadTask = uploadBytesResumable(storageref, file);
+
+    uploadTask.on("state_changed", () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((DownloadURL) => {
+        setFormdata({ ...formdata, avatar: DownloadURL });
+      });
+    });
+  };
 
   const handleSubmit = async (e) => {
     try {
@@ -117,7 +114,7 @@ const Profile = () => {
             <img
               src={formdata?.avatar} // Use optional chaining here
               alt="profile image"
-              className="w-44 h-56 rounded-lg no-repeat center object-cover"
+              className="w-44 h-60 rounded-lg no-repeat center object-cover"
               onClick={() => fileref.current.click()}
             />
           </div>
@@ -144,7 +141,7 @@ const Profile = () => {
               className="bg-green-500 text-white p-3 rounded-lg font-semibold text-xl"
               onClick={handleSubmit}
             >
-              Update Profile
+              {loading ? "Loading..." : "Update Profile"}
             </button>
             <button
               className="bg-red-500 text-white flex flex-row p-3 justify-center items-center gap-2 rounded-lg font-semibold text-xl"
@@ -152,9 +149,13 @@ const Profile = () => {
             >
               <IoLogOutOutline /> Logout
             </button>
+            <Link className="text-blue-500 font-semibold ml-auto cursor-pointer" to="/changepassword">
+            <span >Change passoword?</span>
+            </Link>
           </div>
         </div>
       </div>
+      {error && <p className="text-red-500">{error}</p>}
       <div className="flex-1">My orders</div>
     </div>
   );

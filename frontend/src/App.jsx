@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Contact from "./pages/Contact";
 import Product from "./pages/Product";
+import Changepass from "./pages/Changepass";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
                 <Route path="profile" element={<Profile />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="product" element={<Product />} />
+                <Route path="changepassword" element={<Changepass />} />
               </Routes>
               <Footer />
             </div>
