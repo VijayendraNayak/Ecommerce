@@ -5,7 +5,7 @@ import {
   registerStart,
   registerSuccess,
   registerFailure,
-} from "../redux/user/userSlice";
+} from "../../redux/user/userSlice";
 
 const Register = () => {
   const [formdata, setFormdata] = useState({});

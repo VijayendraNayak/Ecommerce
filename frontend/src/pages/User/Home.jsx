@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment, useRef } from "react";
 import { MdOutlineMouse } from "react-icons/md";
-import Header from "../components/Header/Header";
+import Header from "../../components/Header/Header";
 
 const Home = () => {
   const [products, setProducts] = useState(null);

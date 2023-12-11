@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { app } from "../firebase";
+import { app } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../redux/user/userSlice";
+} from "../../redux/user/userSlice";
 
 const Login = () => {
   const [formdata, setFormdata] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loadings, setLoadings] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { loading, error } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
@@ -38,12 +40,13 @@ const Login = () => {
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/");
+      ( data.users.role === "admin") ? navigate("admin/home") : navigate("/");
     } catch (error) {
       console.log("catcherr", error);
       dispatch(signInFailure(error));
     }
   };
+  
   const handlegoogleSubmit = async (e) => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
@@ -68,9 +71,10 @@ const Login = () => {
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/");
+      (data.role==="admin")?navigate('/admin/home'):navigate("/")
+      setLoadings(false)
     } catch (error) {
-      console.log("catcherr", error);
+      console.log({error})
       dispatch(signInFailure(error));
     }
   };
@@ -81,7 +85,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col p-10 pt-20 justify-center items-center">
-      {loading && (
+      {loadings && loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-50">
           <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-red-500"></div>
         </div>

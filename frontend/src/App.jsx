@@ -1,49 +1,60 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer";
-import About from "./pages/About";
-import Home from "./pages/Home";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Contact from "./pages/Contact";
-import Product from "./pages/Product";
-import Changepass from "./pages/Changepass";
+import About from "./pages/User/About";
+import Home from "./pages/User/Home";
+import Profile from "./pages/User/Profile";
+import Login from "./pages/User/Login";
+import Register from "./pages/User/Register";
+import Contact from "./pages/User/Contact";
+import Product from "./pages/User/Product";
+import Changepass from "./pages/User/Changepass";
 import Privateroute from "./components/Privateroute";
-import Adminroute from "./components/Adminroute";
+import Adminroute from "./components/Privateroute";
+import AdminHeader from "./components/Header/AdminHeader";
+import AdminHome from "./pages/Admin/AdminHome";
+import AdminProduct from "./pages/Admin/AdminProduct";
+import AdminProfile from "./pages/Admin/AdminProfile";
+import AdminUser from "./pages/Admin/AdminUser";
+import AdminOrder from "./pages/Admin/AdminOrder";
+
+function MainApp() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.includes("admin");
+  console.log(isAdminRoute)
+  console.log(location.pathname)
+
+  return (
+    <div>
+      {isAdminRoute ? <AdminHeader /> : <Header />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="about" element={<About />} />
+        <Route element={<Privateroute />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="changepassword" element={<Changepass />} />
+        </Route>
+        <Route path="contact" element={<Contact />} />
+        <Route path="product" element={<Product />} />
+        <Route element={<Adminroute />}>
+          <Route path="admin/home" element={<AdminHome />} />
+          <Route path="admin/product" element={<AdminProduct />} />
+          <Route path="admin/profile" element={<AdminProfile />} />
+          <Route path="admin/user" element={<AdminUser />} />
+          <Route path="admin/order" element={<AdminOrder />} />
+        </Route>
+      </Routes>
+      <Footer />
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Home route without the Header */}
-        <Route path="/" element={<Home />} />
-
-        {/* Routes with the Header */}
-        <Route
-          path="/*"
-          element={
-            <div>
-              <Header />
-              <Routes>
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="about" element={<About />} />
-                <Route element={<Privateroute/>}>
-                <Route path="profile" element={<Profile />} />
-                <Route path="changepassword" element={<Changepass />} />
-                </Route>
-                <Route element={<Adminroute/>}>
-                
-                </Route>
-                <Route path="contact" element={<Contact />} />
-                <Route path="product" element={<Product />} />
-              </Routes>
-              <Footer />
-            </div>
-          }
-        />
-      </Routes>
+      <MainApp />
     </BrowserRouter>
   );
 }

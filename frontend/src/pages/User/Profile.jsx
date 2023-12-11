@@ -9,14 +9,14 @@ import {
   signoutStart,
   signoutSuccess,
   signoutFailure,
-} from "../Redux/User/userSlice";
+} from "../../Redux/User/userSlice";
 import {
   ref,
   getStorage,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { app } from "../firebase";
+import { app } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
