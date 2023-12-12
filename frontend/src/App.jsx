@@ -10,7 +10,7 @@ import Contact from "./pages/User/Contact";
 import Product from "./pages/User/Product";
 import Changepass from "./pages/User/Changepass";
 import Privateroute from "./components/Privateroute";
-import Adminroute from "./components/Privateroute";
+import Adminroute from "./components/Adminroute";
 import AdminHeader from "./components/Header/AdminHeader";
 import AdminHome from "./pages/Admin/AdminHome";
 import AdminProduct from "./pages/Admin/AdminProduct";
@@ -21,12 +21,12 @@ import AdminOrder from "./pages/Admin/AdminOrder";
 function MainApp() {
   const location = useLocation();
   const isAdminRoute = location.pathname.includes("admin");
-  console.log(isAdminRoute)
-  console.log(location.pathname)
 
   return (
     <div>
-      {isAdminRoute ? <AdminHeader /> : <Header />}
+
+    <div>
+       {isAdminRoute?<AdminHeader />:<Header/>}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
@@ -39,7 +39,7 @@ function MainApp() {
         <Route path="contact" element={<Contact />} />
         <Route path="product" element={<Product />} />
         <Route element={<Adminroute />}>
-          <Route path="admin/home" element={<AdminHome />} />
+          <Route path="admin" element={<AdminHome />} />
           <Route path="admin/product" element={<AdminProduct />} />
           <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/user" element={<AdminUser />} />
@@ -47,6 +47,7 @@ function MainApp() {
         </Route>
       </Routes>
       <Footer />
+    </div>
     </div>
   );
 }

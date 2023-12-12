@@ -20,9 +20,9 @@ const Footer = () => {
           />
         </div>
       </div>
-      <div className="p-6 flex flex-col gap-4 items-center">
-        <p className="text-6xl font-bold text-red-500">Ecommerce</p>
-        <p>Keep buying and growing...</p>
+      <div className="p-6 flex flex-col gap-4 items-center justify-center">
+        <p className="text-6xl font-bold text-red-500 ">Ecommerce</p>
+        <p className="flex justify-center ">Keep buying and growing...</p>
         <p>&copy; All rights reserved @ Ecommerce</p>
       </div>
 

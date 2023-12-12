@@ -30,15 +30,15 @@ const AdminHeader = ({ loading }) => {
 
   const togglenavbar = () => {
     setNavbar(!navbar);
-    console.log(navbar);
   };
 
   return (
-    <AdminHeader
+    <div
       className={`bg-red-100 fixed top-0 left-0 w-full z-10 transition-transform duration-300 transform ${
         isNavVisible ? "translateY(0)" : "-translate-y-full"
       }`}
     >
+      {console.log(currentUser)}
       <div className="flex justify-between p-3 max-w-6xl w-full mx-auto items-center">
         <Link to="/admin/">
           <div
@@ -69,11 +69,6 @@ const AdminHeader = ({ loading }) => {
           <Link to="/admin/orders">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Orders
-            </li>
-          </Link>
-          <Link to="/admin/profile">
-            <li className="hover:underline text-red-700 hidden sm:flex">
-               {currentUser.name}
             </li>
           </Link>
         </ul>
@@ -136,7 +131,7 @@ const AdminHeader = ({ loading }) => {
           </div>
         )}
       </div>
-    </AdminHeader>
+    </div>
   );
 };
 

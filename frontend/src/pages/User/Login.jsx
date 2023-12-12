@@ -17,7 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loading, error } = useSelector((state) => state.user);
+  const { currentUser,loading, error } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
@@ -48,6 +48,7 @@ const Login = () => {
   };
   
   const handlegoogleSubmit = async (e) => {
+    e.preventDefault()
     const provider = new GoogleAuthProvider();
     const auth = getAuth(app);
     const result = await signInWithPopup(auth, provider);
@@ -71,7 +72,8 @@ const Login = () => {
         return;
       }
       dispatch(signInSuccess(data));
-      (data.role==="admin")?navigate('/admin/home'):navigate("/")
+      (data.role==="admin")?navigate('/admin'):navigate("/")
+      console.log("here")
       setLoadings(false)
     } catch (error) {
       console.log({error})

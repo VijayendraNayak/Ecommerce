@@ -6,7 +6,7 @@ const Adminroute = () => {
     const {currentUser}=useSelector((state)=>state.user)
     const role=currentUser.role;
   return (
-    (role===user)?<Outlet/>:<Navigate/>
+    (role==="admin")?<Outlet/>:<Navigate/>
     
   )
 }
