@@ -30,6 +30,7 @@ const AdminHeader = ({ loading }) => {
 
   const togglenavbar = () => {
     setNavbar(!navbar);
+    console.log(navbar);
   };
 
   return (
@@ -38,7 +39,6 @@ const AdminHeader = ({ loading }) => {
         isNavVisible ? "translateY(0)" : "-translate-y-full"
       }`}
     >
-      {console.log(currentUser)}
       <div className="flex justify-between p-3 max-w-6xl w-full mx-auto items-center">
         <Link to="/admin/">
           <div
@@ -51,24 +51,29 @@ const AdminHeader = ({ loading }) => {
           </div>
         </Link>
         <ul className={`lg:flex md:flex gap-6 lg:items-center `}>
-          <Link to="/admin/">
+          <Link to="/admin">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Home
             </li>
           </Link>
-          <Link to="/admin/users">
+          <Link to="/admin/user">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Users
             </li>
           </Link>
-          <Link to="/admin/products">
+          <Link to="/admin/product">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Products
             </li>
           </Link>
-          <Link to="/admin/orders">
+          <Link to="/admin/order">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Orders
+            </li>
+          </Link>
+          <Link to="/admin/profile">
+            <li className="hover:underline text-red-700 hidden sm:flex font-semibold text-xl">
+               {currentUser.name}
             </li>
           </Link>
         </ul>
@@ -115,7 +120,7 @@ const AdminHeader = ({ loading }) => {
                 </li>
               </Link>
               <Link to="/admin/profile">
-                <li className="hover:underline text-red-700 sm:hidden">
+                <li className="hover:underline text-red-700 sm:hidden font-semibold text-xl">
                   {currentUser.name}
                 </li>
               </Link>

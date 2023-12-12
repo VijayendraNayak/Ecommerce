@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer";
 import About from "./pages/User/About";
@@ -17,16 +18,39 @@ import AdminProduct from "./pages/Admin/AdminProduct";
 import AdminProfile from "./pages/Admin/AdminProfile";
 import AdminUser from "./pages/Admin/AdminUser";
 import AdminOrder from "./pages/Admin/AdminOrder";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { signoutSuccess } from "./redux/user/userSlice";
 
 function MainApp() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.includes("admin");
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Check if the user is an admin before dispatching signout action
+      if (currentUser && currentUser.role === "admin") {
+        dispatch(signoutSuccess());
+        const confirmationMessage = "Are you sure you want to leave?";
+        event.returnValue = confirmationMessage; // Standard for most browsers
+        return confirmationMessage; // For some older browsers
+      }
+    };
 
+    // Add the event listener
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [currentUser, dispatch]);
   return (
     <div>
-
-    <div>
-       {isAdminRoute?<AdminHeader />:<Header/>}
+      {currentUser && currentUser.role === "admin" ? (
+        <AdminHeader />
+      ) : (
+        <Header />
+      )}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
@@ -47,7 +71,6 @@ function MainApp() {
         </Route>
       </Routes>
       <Footer />
-    </div>
     </div>
   );
 }

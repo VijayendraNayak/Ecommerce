@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../../firebase";
@@ -73,7 +73,6 @@ const Login = () => {
       }
       dispatch(signInSuccess(data));
       (data.role==="admin")?navigate('/admin'):navigate("/")
-      console.log("here")
       setLoadings(false)
     } catch (error) {
       console.log({error})
@@ -84,6 +83,21 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  useEffect(() => {
+    const handleUnload = async () => {
+      // Check if the user is an admin before logging out
+      if (currentUser && currentUser.role === "admin") {
+        const auth = getAuth(app);
+        await signOut(auth);
+      }
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, [currentUser]);
 
   return (
     <div className="flex flex-col p-10 pt-20 justify-center items-center">
