@@ -76,14 +76,16 @@ exports.numberOfUsers = asyncErrHandler(async (req, res, next) => {
     res.status(200).json({ message: "Num of users:", length, users })
 })
 exports.getSingleUser = asyncErrHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id)
+    const {id}=req.body;
+    const user = await User.findById(id)
     if (!user) { return next(errorHandler(404, "User not found")) }
     res.status(200).json({ message: "User found successfully", user })
 })
 exports.deleteUser = asyncErrHandler(async (req, res, next) => {
-    const user = await User.findById(req.params.id)
+    const {id}=req.body;
+    const user = await User.findById(id)
     if (!user) { return next(errorHandler(404, "The user doesnot exist")) }
-    await User.findByIdAndDelete(req.params.id)
+    await User.findByIdAndDelete(id)
     res.status(200).json({ message: "User deleted successfully" })
 })
 exports.google = asyncErrHandler(async (req, res, next) => {

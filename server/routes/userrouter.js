@@ -10,7 +10,8 @@ router.get("/logout",isAuthenticated,logout)
 router.put("/password",isAuthenticated,updatePassword)
 router.put("/update",isAuthenticated,updateProfile)
 router.get("/admin/noofuser",isAuthenticated,authorizeRoles("admin"), numberOfUsers)
-router.get("/admin/singleuser/:id",isAuthenticated,authorizeRoles("admin"), getSingleUser)
+router.post("/admin/singleuser",isAuthenticated,authorizeRoles("admin"), getSingleUser)
 router.put("/admin/updaterole/:id",isAuthenticated,authorizeRoles("admin"), updateRole)
-router.delete("/admin/delete/:id",isAuthenticated,authorizeRoles("admin"), deleteUser)
+router.post("/admin/delete",isAuthenticated,authorizeRoles("admin"), deleteUser)
+
 module.exports=router
