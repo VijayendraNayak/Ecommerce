@@ -21,6 +21,7 @@ import AdminOrder from "./pages/Admin/AdminOrder";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "./redux/user/userSlice";
+import FindUser from "./pages/Admin/FindUser";
 
 function MainApp() {
   const { currentUser } = useSelector((state) => state.user);
@@ -68,6 +69,7 @@ function MainApp() {
           <Route path="admin/profile" element={<AdminProfile />} />
           <Route path="admin/user" element={<AdminUser />} />
           <Route path="admin/order" element={<AdminOrder />} />
+          <Route path="admin/finduser" element={<FindUser />} />
         </Route>
       </Routes>
       <Footer />
