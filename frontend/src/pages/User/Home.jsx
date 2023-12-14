@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment, useRef } from "react";
 import { MdOutlineMouse } from "react-icons/md";
 import Header from "../../components/Header/Header";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState(null);
@@ -78,27 +79,36 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col gap-4" ref={featuredProductsRef}>
-        <p className="text-center font-semibold underline pt-10">
+        <p className="text-center text-5xl font-semibold underline pt-10">
           Featured Products
         </p>
         <div className="p-6 flex flex-wrap justify-around gap-6">
           {products &&
-            products.map((product) => (
+            products.slice(0, 7).map((product) => (
               <div
                 key={product._id}
-                className="border-2 rounded-lg border-red-500 w-60 h-96 hover:scale-110 hover:border-yellow-500 transition-transform duration-500"
+                className="border-2  justify-center flex flex-col rounded-lg border-red-500 w-64 h-96 hover:scale-110 hover:border-yellow-500 transition-transform duration-500"
               >
                 <img
-                  className="rounded-lg w-full h-48"
+                  className="rounded-lg w-full h-48 p-1"
                   src={product.images[0]}
                   alt="shirt"
                 />
-                <p>Name:{product.name}</p>
-                <p>Stock:{product.stock}</p>
+                <div className="p-2">
+                <p className="font-semibold">Name:{product.name}</p>
+                <p className="font-semibold">Price:{product.price}</p>
+                <p className="font-semibold">Category:{product.category}</p>
+                <p className="font-semibold">Ratings:{product.ratings}</p>
+                <p className="font-semibold">Stock:{product.stock}</p>
+                </div>
+                <button className="p-2 mx-auto bg-red-500 text-white rounded-lg font-semibold">More details</button>
               </div>
             ))}
         </div>
       </div>
+      <Link to="/product" className="flex justify-center">
+        <button className="bg-green-500 text-white font-semibold  p-3 rounded-lg text-xl">View more products...</button>
+      </Link>
     </Fragment>
   );
 };
