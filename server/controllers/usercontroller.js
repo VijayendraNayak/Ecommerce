@@ -61,11 +61,11 @@ exports.updateProfile = asyncErrHandler(async (req, res, next) => {
     res.status(200).json({ message: "User updated Successfully", user })
 })
 exports.updateRole = asyncErrHandler(async (req, res, next) => {
-    const { role } = req.body
-    let user = await User.findById(req.params.id)
+    const { id,role } = req.body
+    let user = await User.findById(id)
     if (!user) { return next(errorHandler(404, "User not found")) }
     user.role = role
-    const upuser = await User.findByIdAndUpdate(req.params.id, user, { new: true })
+    const upuser = await User.findByIdAndUpdate(id, user, { new: true })
     res.status(200).json({ message: "User updated Successfully", upuser })
 })
 

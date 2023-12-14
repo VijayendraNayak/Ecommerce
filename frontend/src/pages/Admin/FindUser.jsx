@@ -7,6 +7,8 @@ const FindUser = () => {
   const [formdata, setFormdata] = useState();
   const [found, setFound] = useState(false);
   const [remove, setRemove] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [updatecom, setUpdatecom] = useState(false);
 
   const handleclick = async (e) => {
     e.preventDefault();
@@ -19,29 +21,29 @@ const FindUser = () => {
     });
     const data = await res.json();
     if (data.success === false) {
-      console.log(data.message)
+      console.log(data.message);
       setFound(false);
       return;
     }
     setFormdata(data.user);
     setFound(true);
   };
-  const handleupdateclick = async (e) => {
+
+  const handleupdate = async (e) => {
     e.preventDefault();
-    // const res = await fetch("/api/user/admin/singleuser", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formdata),
-    // });
-    // const data = await res.json();
-    // if (data.success === false) {
-    //   setFound(false);
-    //   return;
-    // }
-    // setFormdata(data.user);
-    // setFound(true);
+    const res = await fetch("/api/user/admin/updaterole", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userid),
+    });
+    const data = await res.json();
+    if (data.success === false) {
+      return;
+    }
+    setFormdata(data.user);
+    setUpdatecom(true)
   };
   const handledeleteclick = async (e) => {
     e.preventDefault();
@@ -54,10 +56,11 @@ const FindUser = () => {
     });
     const data = await res.json();
     if (data.success === false) {
+      
       return;
     }
-    setFound(false)
-    setRemove(true)
+    setFound(false);
+    setRemove(true);
   };
   return (
     <div className="pt-28 h-screen">
@@ -78,7 +81,14 @@ const FindUser = () => {
         </form>
         <div className="pt-4">
           {remove && (
-            <p className="text-red-500 font-semibold text-5xl text-center">User deleted Successfully!!!!</p>
+            <p className="text-red-500 font-semibold text-5xl text-center">
+              User deleted Successfully!!!!
+            </p>
+          )}
+          {updatecom && (
+            <p className="text-green-500 font-semibold text-5xl text-center">
+              User Updated Successfully!!!!
+            </p>
           )}
           {found && formdata && (
             <div className="text-center flex flex-col gap-4">
@@ -100,12 +110,50 @@ const FindUser = () => {
                     <div>Email: {formdata ? formdata.email : "useremail"}</div>
                     <div>Role: {formdata ? formdata.role : "userrole"}</div>
                   </div>
+
                   <div className="flex justify-center gap-4">
-                    <button className="p-3 bg-green-500 rounded-lg text-white text-xl font-semibold hover:opacity-90" type="button" onClick={handleupdateclick}>
+                    <button
+                      className={`p-3 bg-green-500 rounded-lg text-white text-xl font-semibold hover:opacity-90 ${
+                        formdata.role === "admin" || update ? "hidden" : "flex"
+                      }`}
+                      type="button"
+                      onClick={() => setUpdate(true)}
+                    >
                       Update Role
                     </button>
-                    <button className="p-3 bg-red-500 rounded-lg text-white text-xl font-semibold hover:opacity-90" type="button" onClick={handledeleteclick}>
+                    <button
+                      className={`p-3 bg-red-500 rounded-lg text-white text-xl font-semibold hover:opacity-90 ${
+                        formdata.role === "admin" ? "hidden" : "flex"
+                      }`}
+                      type="button"
+                      onClick={handledeleteclick}
+                    >
                       Delete User
+                    </button>
+                  </div>
+                  <div
+                    className={`${
+                      !update ? "hidden" : "flex"
+                    } justify-center flex gap-5`}
+                  >
+                    <select
+                      id="role"
+                      className="border p-3 rounded-lg"
+                      onChange={(e) => {
+                        setUserid({ ...userid, [e.target.id]: e.target.value });
+                      }}
+                    >
+                      <option>Select Role</option>
+                      <option value="user">user</option>
+                      <option value="admin">admin</option>
+                    </select>
+                    <button
+                      className={`p-3 bg-green-500 rounded-lg text-white text-xl font-semibold hover:opacity-90 
+                      }`}
+                      type="button"
+                      onClick={handleupdate}
+                    >
+                      Update
                     </button>
                   </div>
                 </div>

@@ -11,7 +11,7 @@ router.put("/password",isAuthenticated,updatePassword)
 router.put("/update",isAuthenticated,updateProfile)
 router.get("/admin/noofuser",isAuthenticated,authorizeRoles("admin"), numberOfUsers)
 router.post("/admin/singleuser",isAuthenticated,authorizeRoles("admin"), getSingleUser)
-router.put("/admin/updaterole/:id",isAuthenticated,authorizeRoles("admin"), updateRole)
+router.post("/admin/updaterole",isAuthenticated,authorizeRoles("admin"), updateRole)
 router.post("/admin/delete",isAuthenticated,authorizeRoles("admin"), deleteUser)
 
 module.exports=router

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer";
 import About from "./pages/User/About";
@@ -18,14 +18,16 @@ import AdminProduct from "./pages/Admin/AdminProduct";
 import AdminProfile from "./pages/Admin/AdminProfile";
 import AdminUser from "./pages/Admin/AdminUser";
 import AdminOrder from "./pages/Admin/AdminOrder";
+import FindUser from "./pages/Admin/FindUser";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "./redux/user/userSlice";
-import FindUser from "./pages/Admin/FindUser";
 
 function MainApp() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
+
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       // Check if the user is an admin before dispatching signout action
@@ -37,14 +39,20 @@ function MainApp() {
       }
     };
 
-    // Add the event listener
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    const handleScrollToTop = () => {
+      window.scrollTo(0, 0);
+    };
 
-    // Cleanup the event listener when the component is unmounted
+    // Add the event listeners
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    handleScrollToTop(); // Scroll to top when the component is mounted
+
+    // Cleanup the event listeners when the component is unmounted
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [currentUser, dispatch]);
+  }, [currentUser, dispatch, pathname]);
+
   return (
     <div>
       {currentUser && currentUser.role === "admin" ? (
