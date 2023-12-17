@@ -106,7 +106,7 @@ const Home = () => {
             ))}
         </div>
       </div>
-      <Link to="/product" className="flex justify-center">
+      <Link to="/search" className="flex justify-center">
         <button className="bg-green-500 text-white font-semibold  p-3 rounded-lg text-xl">View more products...</button>
       </Link>
     </Fragment>

@@ -8,7 +8,6 @@ import Profile from "./pages/User/Profile";
 import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
 import Contact from "./pages/User/Contact";
-import Product from "./pages/User/Product";
 import Changepass from "./pages/User/Changepass";
 import Privateroute from "./components/Privateroute";
 import Adminroute from "./components/Adminroute";
@@ -22,6 +21,7 @@ import FindUser from "./pages/Admin/FindUser";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "./redux/user/userSlice";
+import Search from "./pages/User/Search";
 
 function MainApp() {
   const { currentUser } = useSelector((state) => state.user);
@@ -70,7 +70,7 @@ function MainApp() {
           <Route path="changepassword" element={<Changepass />} />
         </Route>
         <Route path="contact" element={<Contact />} />
-        <Route path="product" element={<Product />} />
+        <Route path="search" element={<Search />} />
         <Route element={<Adminroute />}>
           <Route path="admin" element={<AdminHome />} />
           <Route path="admin/product" element={<AdminProduct />} />

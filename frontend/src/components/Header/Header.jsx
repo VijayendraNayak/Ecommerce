@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ loading }) => {
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [searchstate, setSearchstate] = useState(" ");
   const [navbar, setNavbar] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const handleScroll = () => {
     const currentScrollPos = window.scrollY;
@@ -27,6 +30,23 @@ const Header = ({ loading }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [prevScrollPos, loading]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTermFromUrl = urlParams.get("name");
+    // console.log(searchTermFromUrl)
+    if (searchTermFromUrl) {
+      setSearchstate(searchTermFromUrl);
+    }
+  }, [location.search]);
+
+  const searchsubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("name", searchstate);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
 
   const togglenavbar = () => {
     setNavbar(!navbar);
@@ -56,7 +76,7 @@ const Header = ({ loading }) => {
               Home
             </li>
           </Link>
-          <Link to="/product">
+          <Link to="/search">
             <li className="hover:underline text-red-700 hidden sm:flex">
               Products
             </li>
@@ -74,7 +94,11 @@ const Header = ({ loading }) => {
           {/* {console.log(currentUser.avatar)} */}
           {currentUser ? (
             <Link to="/profile">
-              <img className=" rounded-full w-10 h-10 hidden sm:flex" src={currentUser.avatar} alt="profile" />
+              <img
+                className=" rounded-full w-10 h-10 hidden sm:flex"
+                src={currentUser.avatar}
+                alt="profile"
+              />
             </Link>
           ) : (
             <Link to="/login">
@@ -85,11 +109,17 @@ const Header = ({ loading }) => {
           )}
         </ul>
         {/* Search form */}
-        <form className="bg-red-200 rounded-lg items-center p-3 hidden sm:flex">
+        <form
+          className="bg-red-200 rounded-lg items-center p-3 hidden sm:flex"
+          onSubmit={searchsubmit}
+        >
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent focus:outline-none w-20 sm:w-48"
+            onChange={(e) => {
+              setSearchstate(e.target.value);
+            }}
           />
           <FaSearch className="text-red-600"></FaSearch>
         </form>
@@ -132,11 +162,18 @@ const Header = ({ loading }) => {
                 </li>
               </Link>
             </ul>
-            <form className=" flex px-3 bg-red-200 rounded-lg items-center justify-between sm:hidden">
+            <form
+              className=" flex px-3 bg-red-200 rounded-lg items-center justify-between sm:hidden"
+              onSubmit={searchsubmit}
+            >
               <input
                 type="text"
                 placeholder="Search..."
-                className="bg-transparent focus:outline-none sm:w-48"
+                className="bg-transparent focus:outline-none w-24 sm:w-64 "
+                onChange={(e) => {
+                  setSearchstate(e.target.value);
+                }}
+                value={searchstate}
               />
               <FaSearch className="text-red-600 "></FaSearch>
             </form>
