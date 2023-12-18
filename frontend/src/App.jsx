@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { signoutSuccess } from "./redux/user/userSlice";
 import Search from "./pages/User/Search";
+import FindProduct from "./pages/Admin/FindProduct";
 
 function MainApp() {
   const { currentUser } = useSelector((state) => state.user);
@@ -78,6 +79,7 @@ function MainApp() {
           <Route path="admin/user" element={<AdminUser />} />
           <Route path="admin/order" element={<AdminOrder />} />
           <Route path="admin/finduser" element={<FindUser />} />
+          <Route path="admin/findproduct" element={<FindProduct />} />
         </Route>
       </Routes>
       <Footer />

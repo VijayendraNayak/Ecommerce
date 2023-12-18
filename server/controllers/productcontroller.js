@@ -14,25 +14,49 @@ exports.createProduct = asyncErrHandler(async (req, res, next) => {
     res.status(200).json({ success: true, product })
 })
 //Only for admin
+
 exports.updateProduct = async (req, res, next) => {
-    let product = await Product.findById(req.params.id)
-    if (!product) { return next(errorHandler(404, 'Product not found')) }
-    product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    res.status(200).json({ success: true, message: "Product updated successfully", product })
-}
+  const { id, name, price, category, stock, ratings } = req.body;
+
+  try {
+    let product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    // Update only the provided fields
+    if (name) product.name = name;
+    if (price) product.price = price;
+    if (category) product.category = category;
+    if (stock) product.stock = stock;
+    if (ratings) product.ratings = ratings;
+
+    // Save the updated product
+    await product.save();
+
+    res.status(200).json({ success: true, message: 'Product updated successfully', product });
+  } catch (error) {
+    // Handle any errors that may occur during the update process
+    next(error);
+  }
+};
+
 //Only for admin
 exports.deleteProduct = async (req, res, next) => {
-    let product = await Product.findById(req.params.id)
+    const {id}=req.body
+    let product = await Product.findById(id)
     if (!product) { return res.status(404).json({ success: false, message: "Product not found" }) }
-    await Product.findByIdAndDelete(req.params.id).then(() => {
+    await Product.findByIdAndDelete(id).then(() => {
         res.status(200).json({ succses: true, message: "Product deleted successfully" })
     })
 }
 //for user
 exports.getProduct = async (req, res, next) => {
-    let product = await Product.findById(req.params.id)
+    const {id}=req.body
+    let product = await Product.findById(id)
     if (!product) { return res.status(404).json({ success: false, message: "Product not found" }) }
-    res.status(200).json({ succses: true, product })
+    res.status(200).json({ success: true, product })
 }
 
 //for search filter
@@ -118,3 +142,9 @@ exports.ReviewProduct = asyncErrHandler(async (req, res, next) => {
     res.status(200).json({ success:true,message: "Review uploaded successfully", product: updatedProduct });
 });
  
+exports.getallcount = asyncErrHandler(async (req, res, next) => {
+    const length = await Product.countDocuments()
+    const products = await Product.find()
+    if (!length) { return next(errorHandler(403, "There are no users in the database")) }
+    res.status(200).json({ message: "Num of users:", length, products })
+})
